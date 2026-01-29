@@ -18,7 +18,14 @@ int main(){
 
     if(filePtr){
         while(fgets(fileData, 128, filePtr) != NULL){
-            printf("%s \n", fileData);
+            for(int i = 0; fileData[i] != '\0'; i++){
+                if(fileData[i] == '(' || fileData[i] == '{' || fileData[i] == '[' || fileData[i] == '\\'){
+                    printf("%c", fileData[i]);
+                }
+                if(fileData[i] == ')' || fileData[i] == '}' || fileData[i] == ']'){
+                    printf("%c", fileData[i]);
+                }
+            }
         }
     }
     else{
