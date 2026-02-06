@@ -72,9 +72,9 @@ bool peek(Stack *stack, char *out)
 
 int main()
 {
-    char fileInput[100];
-    char fileData[100];
-    char fullPath[150];
+    char fileInput[1024];
+    char fileData[1024];
+    char fullPath[1024];
     FILE *filePtr;
 
     Stack *stack = createStack(100000);
@@ -97,16 +97,9 @@ int main()
 
         while (fgets(fileData, 128, filePtr) != NULL)
         {
+            lineNum++;
             for (int i = 0; fileData[i] != '\0'; i++)
             {
-                if (fileData[i] == '(' || fileData[i] == '{' || fileData[i] == '[' || fileData[i] == '\\')
-                {
-                    printf("%c", fileData[i]);
-                }
-                if (fileData[i] == ')' || fileData[i] == '}' || fileData[i] == ']')
-                {
-                    printf("%c", fileData[i]);
-                }
 
                 char c = fileData[i];
 
@@ -152,11 +145,17 @@ int main()
                     pop(stack, &topOpen);
                 }
             }
-            if (errorFound && !isEmpty(stack))
-            {
-                printf("ERROR: missing }, ), or ] at EOF.\n");
-            }
         }
+        if (!errorFound && !isEmpty(stack))
+            {
+                char topOpen;
+                peek(stack, &topOpen);
+                char needed = (topOpen == '(') ? ')' : (topOpen == '{')
+                                    ? '}'
+                                    : (topOpen == '[') ? ']'
+                                                       : '\0';
+                printf("error:  missing %c , line %d.\n", needed, lineNum);
+            }
     }
     else
     {
