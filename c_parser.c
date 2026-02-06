@@ -146,16 +146,18 @@ int main()
                 }
             }
         }
-        if (!errorFound && !isEmpty(stack))
+        if (!errorFound )
             {
+                if(!isEmpty(stack)){
                 char topOpen;
                 peek(stack, &topOpen);
                 char needed = (topOpen == '(') ? ')' : (topOpen == '{')
                                     ? '}'
                                     : (topOpen == '[') ? ']'
                                                        : '\0';
-                printf("error:  missing %c , line %d.\n", needed, lineNum);
+                printf("error:  missing %c , EOF.\n", needed);
             }
+        }
     }
     else
     {
