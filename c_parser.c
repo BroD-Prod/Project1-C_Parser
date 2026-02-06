@@ -70,32 +70,30 @@ bool peek(Stack *stack, char *out)
     return true;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     char fileInput[1024];
     char fileData[1024];
     char fullPath[1024];
-    FILE *filePtr;
+
+    if(argc < 2)
+    {
+        printf("Please provide a file name as a command line argument.\n");
+        return 1;
+    }
 
     Stack *stack = createStack(100000);
     if (!stack)
         return 1;
 
-    printf("Please enter the file you'd like to check: \n");
-    scanf("%s", fileInput);
-
-    strcpy(fullPath, "./test_files/");
-
-    strcat(fullPath, fileInput);
-
-    filePtr = fopen(fullPath, "r");
+    FILE *filePtr = fopen(argv[1], "r");
 
     if (filePtr)
     {
         int lineNum = 0;
         bool errorFound = false;
 
-        while (fgets(fileData, 128, filePtr) != NULL)
+        while (fgets(fileData, sizeof(fileData), filePtr) != NULL)
         {
             lineNum++;
             for (int i = 0; fileData[i] != '\0'; i++)
@@ -161,7 +159,9 @@ int main()
     }
     else
     {
-        printf("File not found in test files, please try again!\n");
+        printf("Could not open file: %s\n", argv[1]);
+        freeStack(stack);
+        return 1;
     }
     freeStack(stack);
     return 0;
